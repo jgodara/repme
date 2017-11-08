@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Nov 7, 2017 10:49:26 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="jgodara.repme.model.Vouches" table="vouches">
+        <id name="vouchid" type="long">
+            <column name="VOUCHID" />
+            <generator class="assigned" />
+        </id>
+        <property name="evictid" type="java.lang.String">
+            <column name="EVICTID" />
+        </property>
+        <property name="ownerid" type="java.lang.String">
+            <column name="OWNERID" />
+        </property>
+        <property name="uom" type="int">
+            <column name="UOM" />
+        </property>
+        <property name="amount" type="float">
+            <column name="AMOUNT" />
+        </property>
+        <property name="createTime" type="java.util.Date">
+            <column name="CREATETIME" />
+        </property>
+    </class>
+</hibernate-mapping>

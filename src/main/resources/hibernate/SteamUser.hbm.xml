@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="jgodara.repme.steam.model.SteamUser" table="steamuser">
+		<id name="steamid32" type="java.lang.String">
+			<column name="steamId32" />
+		</id>
+		<property name="name" type="java.lang.String">
+			<column name="name" />
+		</property>
+		<property name="imageUrl" type="java.lang.String">
+			<column name="imageUrl" />
+		</property>
+		<property name="level" type="int">
+			<column name="level"></column>
+		</property>
+	</class>
+</hibernate-mapping>
