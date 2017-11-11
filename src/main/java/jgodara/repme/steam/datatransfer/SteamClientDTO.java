@@ -1,10 +1,17 @@
-package jgodara.repme.steam.model;
+package jgodara.repme.steam.datatransfer;
 
-public class SteamUser {
+import java.util.ArrayList;
+import java.util.List;
+
+import jgodara.repme.model.Badges;
+
+public class SteamClientDTO {
 
 	private String steamid32;
 	private String name;
 	private String imageUrl;
+	private String fullImage;
+	private String mediumImage;
 	private int level;
 
 	public String getSteamid32() {
@@ -29,6 +36,22 @@ public class SteamUser {
 
 	public void setImageUrl(String imageUrl) {
 		this.imageUrl = imageUrl;
+	}
+
+	public String getFullImage() {
+		return fullImage;
+	}
+
+	public void setFullImage(String fullImage) {
+		this.fullImage = fullImage;
+	}
+
+	public String getMediumImage() {
+		return mediumImage;
+	}
+
+	public void setMediumImage(String mediumImage) {
+		this.mediumImage = mediumImage;
 	}
 
 	public int getLevel() {

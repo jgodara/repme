@@ -15,7 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 import jgodara.repme.SessionNameResolver;
 import jgodara.repme.beans.SessionDetailsBean;
 import jgodara.repme.steam.businessaction.SteamClientBA;
-import jgodara.repme.steam.model.SteamUser;
+import jgodara.repme.steam.datatransfer.SteamClientDTO;
 
 @Controller
 public class SteamController {
@@ -36,7 +36,7 @@ public class SteamController {
 				logger.debug("OpenID Verified: " + identifier);
 
 				// Create session details from the SteamID
-				SteamUser steamUser = steamClientBA.getSteamUser(identifier.get("identity"));
+				SteamClientDTO steamUser = steamClientBA.getSteamUser(identifier.get("identity"));
 				if (steamUser != null) {
 					SessionDetailsBean sdb = new SessionDetailsBean();
 					sdb.setLoggedIn(true);

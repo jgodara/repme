@@ -2,13 +2,13 @@ package jgodara.repme.datatransfer;
 
 import java.util.Date;
 
-import jgodara.repme.steam.model.SteamUser;
+import jgodara.repme.steam.datatransfer.SteamClientDTO;
 
 public class VouchesDTO {
 
 	private long vouchid;
-	private SteamUser owner;
-	private SteamUser evictor;
+	private SteamClientDTO owner;
+	private SteamClientDTO evictor;
 	private int uom;
 	private float amount;
 	private Date createTime;
@@ -21,19 +21,19 @@ public class VouchesDTO {
 		this.vouchid = vouchid;
 	}
 
-	public SteamUser getOwner() {
+	public SteamClientDTO getOwner() {
 		return owner;
 	}
 
-	public void setOwner(SteamUser owner) {
+	public void setOwner(SteamClientDTO owner) {
 		this.owner = owner;
 	}
 
-	public SteamUser getEvictor() {
+	public SteamClientDTO getEvictor() {
 		return evictor;
 	}
 
-	public void setEvictor(SteamUser evictor) {
+	public void setEvictor(SteamClientDTO evictor) {
 		this.evictor = evictor;
 	}
 

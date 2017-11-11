@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Nov 12, 2017 1:03:59 AM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="jgodara.repme.model.Reps" table="REPS">
+        <id name="repid" type="int">
+            <column name="REPID" />
+            <generator class="assigned" />
+        </id>
+        <property name="owner" type="java.lang.String">
+            <column name="OWNER" />
+        </property>
+        <property name="evictor" type="java.lang.String">
+            <column name="EVICTOR" />
+        </property>
+        <property name="positive" type="boolean">
+            <column name="POSITIVE" />
+        </property>
+    </class>
+</hibernate-mapping>

@@ -44,7 +44,7 @@ public class VouchesBA {
 			vouchesDTO.setVouchid(vouch.getVouchid());
 			vouchesDTO.setCreateTime(vouch.getCreateTime());
 		} catch (Exception ex) {
-			logger.error("Cannot prepare VouchDTO for VouchID " + vouch.getVouchid(), ex);
+			logger.error("Cannot prepare VouchDTO...", ex);
 		}
 		return vouchesDTO;
 	}

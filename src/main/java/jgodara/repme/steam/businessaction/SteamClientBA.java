@@ -3,6 +3,8 @@ package jgodara.repme.steam.businessaction;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -12,7 +14,11 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.log4j.Logger;
 
 import jgodara.repme.Glob;
+import jgodara.repme.common.exceptions.DAOException;
+import jgodara.repme.model.Badges;
+import jgodara.repme.model.Reps;
 import jgodara.repme.steam.businessobject.SteamClientBO;
+import jgodara.repme.steam.datatransfer.SteamClientDTO;
 import jgodara.repme.steam.model.SteamUser;
 import net.sf.json.JSONObject;
 
@@ -28,7 +34,7 @@ public class SteamClientBA {
 	
 	private SteamClientBO steamClientBO;
 
-	public SteamUser getSteamUser(String steamid) throws ClientProtocolException, IOException {
+	public SteamClientDTO getSteamUser(String steamid) throws ClientProtocolException, IOException {
 
 		SteamUser steamUser = null;
 		try {
@@ -64,10 +70,42 @@ public class SteamClientBA {
 			logger.error(e);
 		}
 		
-		steamUser.setFullImage(toImageUrl(steamUser.getImageUrl(), "full"));
-		steamUser.setMediumImage(toImageUrl(steamUser.getImageUrl(), "medium"));
+		SteamClientDTO dto = new SteamClientDTO();
+		dto.setSteamid32(steamUser.getSteamid32());
+		dto.setLevel(steamUser.getLevel());
+		dto.setName(steamUser.getName());
+		dto.setFullImage(toImageUrl(steamUser.getImageUrl(), "full"));
+		dto.setMediumImage(toImageUrl(steamUser.getImageUrl(), "medium"));
 
-		return steamUser;
+		return dto;
+	}
+	
+	public long getScore(String steamid32) {
+		long score = 0;
+		try {
+			@SuppressWarnings("unchecked")
+			List<Reps> reps = steamClientBO.list("FROM " + Reps.class.getName() + " WHERE evictor='" + steamid32 + "'");
+			for (Reps rep : reps) {
+				if (rep.isPositive())
+					score++;
+				else
+					score--;
+			}
+		} catch (DAOException ex) {
+			logger.error("Cannot get user score: " + steamid32, ex);
+		}
+		return score;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Badges> getBadges(String steamid32) {
+		List<Badges> badges = new ArrayList<Badges>();
+		try {
+			badges = steamClientBO.list("FROM " + Badges.class.getName() + " WHERE steamid32='" + steamid32 + "'");
+		} catch (DAOException ex) {
+			logger.error("Cannot get badges: " + steamid32, ex);
+		}
+		return badges;
 	}
 	
 	private String toImageUrl(String imageUrl, String ext) {

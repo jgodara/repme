@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Nov 12, 2017 12:31:36 AM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="jgodara.repme.model.Badges" table="BADGES">
+        <id name="badgeid" type="long">
+            <column name="BADGEID" />
+            <generator class="assigned" />
+        </id>
+        <property name="steamid32" type="java.lang.String">
+            <column name="STEAMID32" />
+        </property>
+        <property name="code" type="java.lang.String">
+            <column name="CODE" />
+        </property>
+        <property name="name" type="java.lang.String">
+            <column name="NAME" />
+        </property>
+    </class>
+</hibernate-mapping>

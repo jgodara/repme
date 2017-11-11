@@ -49,7 +49,7 @@
 											<strong>${vouch.owner.name}</strong> asked vouches for <strong>${vouch.evictor.name}</strong>
 										</h5> <small class="text-muted repme-time-elapsed">${vouch.createTime}</small>
 										<span class="badge badge-success">For <c:choose>
-												<c:when test="${vouch.uom} eq 1">${vouch.amount} Keys</c:when>
+												<c:when test="${vouch.uom eq 1}">${vouch.amount} Keys</c:when>
 												<c:otherwise>$ ${vouch.amount}</c:otherwise>
 											</c:choose></span>
 									</a>
