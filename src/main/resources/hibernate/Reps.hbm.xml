@@ -6,7 +6,7 @@
     <class name="jgodara.repme.model.Reps" table="REPS">
         <id name="repid" type="int">
             <column name="REPID" />
-            <generator class="assigned" />
+            <generator class="jgodara.repme.key.HibernateKeyGenerator" />
         </id>
         <property name="owner" type="java.lang.String">
             <column name="OWNER" />

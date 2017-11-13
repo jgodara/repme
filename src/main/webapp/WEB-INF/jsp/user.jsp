@@ -20,24 +20,37 @@
 </script>
 </head>
 <body>
+	<div id="sid32" style="display: none !important;">${user.steamid32}</div>
 	<%@ include file="nav.jsp"%>
 	<div class="wrap">
 		<%@ include file="header.jsp"%>
 		<div class="content container">
-			<h2 class="page-title">
-				<a href='<c:url value="/users/${user.steamid32}"></c:url>'>${user.name}</a>
-			</h2>
+			<h2 class="page-title">${user.name}</h2>
 			<div class="row">
 				<div class="col-lg-8">
-					<div class="col-lg-6">
-						<img alt="${user.name}" src="${user.fullImage}">
+					<div class="row">
+						<div class="col-lg-6">
+							<img alt="${user.name}" src="${user.fullImage}">
+						</div>
+						<div class="col-lg-6">
+							<h3>
+								<ul id="badges">
+								</ul>
+							</h3>
+						</div>
 					</div>
-					<div class="col-lg-6">
-						<h3>
-							<ul id="badges">
-								<li>Steam Level of <strong>${user.level}</strong></li>
-							</ul>
-						</h3>
+					<hr>
+					<div class="row">
+						<div class="col-lg-12">
+							<div class="widget text-align-center">
+								<p>
+									<span class="label label-default"><a style="color: white;" href="https://steamcommunity.com/profiles/${user.steamid32}" target="_blank"><i class="fa fa-steam"></i> Steam Profile</a></span>
+									<span class="label label-info"><a style="color: white;" href="https://repme.github.io?r=u_${user.steamid32}" target="_blank">Short URL</a></span>
+									<span class="label label-success"><a style="color: white;" href="javascript:plusRep('${user.steamid32}');"><i class="fa fa-plus"></i> rep</a></span>
+									<span class="label label-danger"><a style="color: white;" href="javascript:minusRep('${user.steamid32}');"><i class="fa fa-minus"></i> rep</a></span>
+								</p>
+							</div>
+						</div>
 					</div>
 				</div>
 				<%@ include file="widgets.jsp"%>

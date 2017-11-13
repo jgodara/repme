@@ -82,19 +82,25 @@ public class SteamClientBA {
 	
 	public long getScore(String steamid32) {
 		long score = 0;
-		try {
-			@SuppressWarnings("unchecked")
-			List<Reps> reps = steamClientBO.list("FROM " + Reps.class.getName() + " WHERE evictor='" + steamid32 + "'");
-			for (Reps rep : reps) {
-				if (rep.isPositive())
-					score++;
-				else
-					score--;
-			}
-		} catch (DAOException ex) {
-			logger.error("Cannot get user score: " + steamid32, ex);
+		List<Reps> reps = getReps(steamid32);
+		for (Reps rep : reps) {
+			if (rep.isPositive())
+				score++;
+			else
+				score--;
 		}
 		return score;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Reps> getReps(String steamid32) {
+		List<Reps> reps = new ArrayList<Reps>();
+		try {
+			reps = steamClientBO.list("FROM " + Reps.class.getName() + " WHERE evictor='" + steamid32 + "'");
+		} catch (DAOException ex) {
+			logger.error("Cannot get user reputation: " + steamid32, ex);
+		}
+		return reps;
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -106,6 +112,15 @@ public class SteamClientBA {
 			logger.error("Cannot get badges: " + steamid32, ex);
 		}
 		return badges;
+	}
+	
+	public void addRep(String userid, String steamid32, boolean positive) throws DAOException {
+		Reps rep = new Reps();
+		rep.setOwner(userid);
+		rep.setEvictor(steamid32);
+		rep.setPositive(positive);
+		
+		steamClientBO.save(rep);
 	}
 	
 	private String toImageUrl(String imageUrl, String ext) {

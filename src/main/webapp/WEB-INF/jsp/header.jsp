@@ -23,8 +23,7 @@
 					<li class="divider"></li>
 					<li class="dropdown"><a
 						href="<c:url value="/users/${s_SessionDetails.userId}"></c:url>"
-						title="Account" id="account" class="dropdown-toggle"
-						data-toggle="dropdown"> <i class="glyphicon glyphicon-user"></i>
+						title="Account"> <i class="glyphicon glyphicon-user"></i>
 					</a>
 					<li class="dropdown"><a
 						href='<c:url value="/steamLogout"></c:url>'><i

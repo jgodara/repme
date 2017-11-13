@@ -17,13 +17,17 @@ public class ApplicationInterceptor extends HandlerInterceptorAdapter {
 	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
 			ModelAndView modelAndView) throws Exception {
 		
-		// Put session details in the model
+		if (request.getRequestURL().indexOf("/ajax/") == -1) { 
 		
-		putSessionParametersInModel(
-			modelAndView.getModel(), 
-			request.getSession(), 
-			SessionNameResolver.getSessionDetails()
-		);
+			// Put session details in the model
+			
+			putSessionParametersInModel(
+				modelAndView.getModel(), 
+				request.getSession(), 
+				SessionNameResolver.getSessionDetails()
+			);
+			
+		}
 		
 		super.postHandle(request, response, handler, modelAndView);
 	}

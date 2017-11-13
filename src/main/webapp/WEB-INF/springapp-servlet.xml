@@ -18,10 +18,7 @@
 	<context:component-scan base-package="jgodara.repme" />
 
 	<mvc:interceptors>
-		<mvc:interceptor>
-			<mvc:mapping path="/" />
-			<bean class="jgodara.repme.interceptors.ApplicationInterceptor" />
-		</mvc:interceptor>
+		<bean class="jgodara.repme.interceptors.ApplicationInterceptor" />
 	</mvc:interceptors>
 
 	<mvc:resources mapping="/assets/**" location="/assets/" />

@@ -4,11 +4,13 @@
 <script src="assets/lib/bootstrap/bootstrap.min.js"></script>
 <script src="assets/lib/widgster/widgster.js"></script>
 <script src="assets/lib/underscore/underscore.js"></script>
+<script src="assets/js/messenger.js"></script>
+<script type="text/javascript" src="assets/js/messenger-theme-flat.js"></script>
+<script type="text/javascript" src="assets/js/ui-notifications.js"></script>
 
 <!-- common application js -->
 <script src="assets/js/app.js"></script>
 <script src="assets/js/settings.js"></script>
-
 
 <script type="text/javascript">
 	$(document).ready(function() {

@@ -4,12 +4,12 @@
 <!-- Generated Nov 11, 2017 5:54:38 PM by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
     <class name="jgodara.repme.model.Vouchers" table="VOUCHERS">
-        <id name="voucherSteamId" type="java.lang.String">
-            <column name="VOUCHERSTEAMID" />
-            <generator class="assigned" />
-        </id>
-        <property name="voucherid" type="long">
+        <id name="voucherid" type="long">
             <column name="VOUCHERID" />
+            <generator class="jgodara.repme.key.HibernateKeyGenerator" />
+        </id>
+        <property name="voucherSteamId" type="java.lang.String">
+            <column name="VOUCHERSTEAMID" />
         </property>
         <property name="vouchid" type="long">
             <column name="VOUCHID" />

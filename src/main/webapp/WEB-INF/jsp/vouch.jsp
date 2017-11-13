@@ -37,14 +37,12 @@
 							<img src="${vouchPost.owner.fullImage}">
 							<h3>${vouchPost.owner.name}</h3>
 							<ul id="own-badges">
-								<li>Steam Level of <strong>${vouchPost.owner.level}</strong></li>
 							</ul>
 						</div>
 						<div class="col-lg-6">
 							<img src="${vouchPost.evictor.fullImage}">
 							<h3>${vouchPost.evictor.name}</h3>
 							<ul id="evic-badges">
-								<li>Steam Level of <strong>${vouchPost.evictor.level}</strong></li>
 							</ul>
 						</div>
 					</div>
@@ -75,35 +73,33 @@
 					</div>
 					<hr>
 					<c:if test="${s_SessionDetails.loggedIn}">
-						<div class="row">
+						<div class="row" id="vouchesrow">
 							<div class="col-lg-12">
 								<section class="widget">
 									<header>
 										<h5>Vouch for ${vouchPost.evictor.name}</h5>
 									</header>
 									<div class="body">
-										<form role="form">
-											<fieldset>
-												<div class="row">
-													<div class="col-sm-8">
-														<div class="form-group">
-															<label id="label-100" for="segmented-dropdown"></label>
-															<div class="input-group">
-																<input id="segmented-dropdown"
-																	class="form-control input-lg" type="text">
-																<div class="input-group-btn">
-																	<button class="btn btn-info input-lg" tabindex="-1">Vouch</button>
-																</div>
+										<fieldset>
+											<div class="row">
+												<div class="col-sm-8">
+													<div class="form-group">
+														<label id="label-100" for="segmented-dropdown"></label>
+														<div class="input-group">
+															<input id="vouchamount"
+																class="form-control input-lg" type="text">
+															<div class="input-group-btn">
+																<button class="btn btn-info input-lg" tabindex="-1" onclick="javascript:vouch();">Vouch</button>
 															</div>
-															<span class="help-block">Vouching is permanent and
-																irreversible. If you vouch for
-																${vouchPost.evictor.name}, the data that you've provided
-																us would be made visible to the public.</span>
 														</div>
+														<span class="help-block">Vouching is permanent and
+															irreversible. If you vouch for ${vouchPost.evictor.name},
+															the data that you've provided us would be made visible to
+															the public.</span>
 													</div>
 												</div>
-											</fieldset>
-										</form>
+											</div>
+										</fieldset>
 									</div>
 								</section>
 							</div>
@@ -119,12 +115,24 @@
 	<script type="text/javascript" src="assets/js/user.js"></script>
 	<script type="text/javascript">
 		$(document).ready(function() {
+			loadPageData();
+		});
+		
+		function clearPageData() {
+			jQuery('#label-100').html('');
+			jQuery('#vouchers').html('');
+			jQuery('#progressInfo').html('');
+			jQuery('#vouchamount').val('');
+		}
+		
+		function loadPageData() {
 			$.ajax({
 				url : 'ajax/vouches/${vouchPost.vouchid}',
 				type : 'GET',
 				success : function(response) {
 					//response = JSON.parse( response );
 					if (response.success) {
+						var prog = (response.amtDone / ${vouchPost.amount}) * 100;
 						for (var i = 0 ; i < response.vouchers.length ; i++) {
 							var voucher = response.vouchers[i];
 							var html = '<div class="list-group list-group-lg">';
@@ -150,17 +158,51 @@
 						</c:choose>
 						jQuery('#label-100').append(' required to reach 100% vouch rate.');			
 						
-						jQuery('#progressInfo').append((response.amtDone / ${vouchPost.amount}) * 100);
+						jQuery('#progressInfo').append(Math.round(prog));
 						jQuery('#progressInfo').append('% vouches done.');
 						
-						jQuery('#vouchPBar').css('width', ((response.amtDone / ${vouchPost.amount}) * 100) + '%');
+						jQuery('#vouchPBar').css('width', prog + '%');
+						
+						if (Math.round(prog) >= 100) {
+							jQuery('#vouchesrow').remove();
+						}
 					}
 				}
 			});
-		});
+		}
 		
 		asyncUserLoad('${vouchPost.owner.steamid32}', jQuery('#own-badges'));
 		asyncUserLoad('${vouchPost.evictor.steamid32}', jQuery('#evic-badges'));
+		
+		<c:if test="${s_SessionDetails.loggedIn}">
+		
+		function vouch() {
+			var vouchid = ${vouchPost.vouchid};
+			$.ajax({
+				url: 'ajax/vouches/post',
+				data: 'vouchid=' + vouchid + '&amt=' + $('#vouchamount').val(),
+				type: 'POST',
+				success: function(response) {
+					if (response.success) {
+						Messenger().post({
+						    message: 'You\'ve vouched for ${vouchPost.evictor.name}',
+						    type: 'success',
+						    showCloseButton: true
+						});
+						clearPageData();
+						loadPageData();
+					} else {
+						Messenger().post({
+						    message: response.message,
+						    type: 'error',
+						    showCloseButton: true
+						});
+					}
+				}
+			});
+		}
+		
+		</c:if>
 	</script>
 </body>
 </html>

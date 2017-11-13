@@ -6,7 +6,7 @@
     <class name="jgodara.repme.model.Vouches" table="vouches">
         <id name="vouchid" type="long">
             <column name="VOUCHID" />
-            <generator class="assigned" />
+            <generator class="jgodara.repme.key.HibernateKeyGenerator" />
         </id>
         <property name="evictid" type="java.lang.String">
             <column name="EVICTID" />

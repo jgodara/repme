@@ -1,13 +1,20 @@
 package jgodara.repme.controllers;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import jgodara.repme.SessionNameResolver;
+import jgodara.repme.beans.SessionDetailsBean;
+import jgodara.repme.businessaction.VouchesBA;
 import jgodara.repme.businessaction.VouchpostBA;
+import jgodara.repme.datatransfer.VouchesDTO;
 import jgodara.repme.datatransfer.VouchpostDTO;
 import jgodara.repme.model.Badges;
+import jgodara.repme.model.Reps;
+import jgodara.repme.model.Vouches;
 import jgodara.repme.steam.businessaction.SteamClientBA;
 import jgodara.repme.steam.datatransfer.SteamClientDTO;
 import net.sf.json.JSONArray;
@@ -27,6 +34,9 @@ public class ApplicationAjaxController {
 	
 	@Autowired
 	private VouchpostBA vouchpostBA;
+	
+	@Autowired
+	private VouchesBA vouchesBA;
 	
 	@Autowired
 	private SteamClientBA steamClientBA;
@@ -93,6 +103,99 @@ public class ApplicationAjaxController {
 			logger.error("Cannot process userservice " + steamid32, ex);
 			
 			json.accumulate("success", false);
+		}
+		
+		response.setContentType("application/json");
+		response.getWriter().write(json.toString());
+	}
+	
+	@RequestMapping(value = "/ajax/vouches/post", method = RequestMethod.POST)
+	public void submitVouch(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		
+		JSONObject json = new JSONObject();
+		
+		Long vouchid = Long.parseLong(request.getParameter("vouchid"));
+		try {
+			SessionDetailsBean sdb = (SessionDetailsBean) request.getSession().getAttribute(SessionNameResolver.getSessionDetails());
+			if (sdb == null) {				
+				json.accumulate("success", false);
+				json.accumulate("message", "You've been logged out. Please login again.");
+			} else {
+				if (vouchpostBA.alreadyVouched(sdb.getUserId(), vouchid)) {
+					json.accumulate("success", false);
+					json.accumulate("message", "You have already vouched for this post.");
+				} else {
+					Float vouchedFor = Float.parseFloat(request.getParameter("amt"));
+					VouchesDTO v = vouchesBA.getVouchPost(vouchid);
+					if (v.getEvictor().getSteamid32().equals(sdb.getUserId())) {
+						json.accumulate("success", false);
+						json.accumulate("message", "You cannot vouch for yourself.");
+					} else {
+						Float vouchAmt = v.getAmount();
+						Float vouchedAmt = vouchpostBA.getVouchPost(vouchid).getVouchedAmount();
+						Float required  = (vouchAmt - vouchedAmt);
+						
+						if (vouchedFor > required) {
+							json.accumulate("success", false);
+							json.accumulate("message", "You can only vouch till the extent of " + (v.getUom() == Vouches.UOM_KEYS ? required + " keys" : "$" + required) + ".");
+						} else {
+							vouchpostBA.processVouch(sdb.getUserId(), vouchid, vouchedFor);
+							json.accumulate("success", true);
+						}
+					}
+				}
+			}
+		} catch (Exception ex) {
+			logger.error("Cannot process vouchservice " + vouchid, ex);
+			
+			json.accumulate("success", false);
+			json.accumulate("message", "Internal Server Error.");
+		}
+		
+		response.setContentType("application/json");
+		response.getWriter().write(json.toString());
+	}
+	
+	@RequestMapping(value = "/ajax/user/post", method = RequestMethod.POST)
+	public void submitRep(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		
+		JSONObject json = new JSONObject();
+		
+		String userid = request.getParameter("userid");
+		try {
+			SessionDetailsBean sdb = (SessionDetailsBean) request.getSession().getAttribute(SessionNameResolver.getSessionDetails());
+			if (sdb == null) {				
+				json.accumulate("success", false);
+				json.accumulate("message", "You've been logged out. Please login again.");
+			} else {
+				if (userid.equals(sdb.getUserId())) {
+					json.accumulate("success", false);
+					json.accumulate("message", "You can't do this on your own profile.");
+				} else {
+					boolean repped = false;
+					List<Reps> reps = steamClientBA.getReps(userid);
+					for (Reps rep : reps) {
+						if (rep.getEvictor().equals(userid)) {
+							repped = true;
+							break;
+						}
+					}
+					
+					if (repped) {
+						json.accumulate("success", false);
+						json.accumulate("message", "You already gave your feedback for this profile.");
+					} else {
+						Byte type = Byte.parseByte(request.getParameter("type"));
+						steamClientBA.addRep(sdb.getUserId(), userid, type == 1);
+						json.accumulate("success", true);
+					}
+				}
+			}
+		} catch (Exception ex) {
+			logger.error("Cannot process repservice " + userid, ex);
+			
+			json.accumulate("success", false);
+			json.accumulate("message", "Internal Server Error.");
 		}
 		
 		response.setContentType("application/json");
